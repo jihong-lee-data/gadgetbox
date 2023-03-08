@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from pathlib import Path
 
 def load_json(path): 
     return json.load(open(path, "r"))
@@ -23,7 +24,11 @@ def rm_spcl_char(text):
 
 class ISO():
     def __init__(self):
-        self.iso_dict= load_json('resource/iso.json')        
+        self.dict_path= Path('resource/iso.json')
+        if not self.dict_path.exists():
+            self.dict_path.mkdir(parents=True, exist_ok=True)
+            os.system(f"curl https://raw.githubusercontent.com/jihong-lee-data/gadgetbox/main/{str(self.dict_path)} > {str(self.dict_path)}")
+        self.iso_dict= load_json(self.dict_path)        
         self.search_list = [[i[0]] + i[1] for i in self.iso_dict["en_to_iso"].items()]   
 
     def __call__(self, text, tol= 2):
