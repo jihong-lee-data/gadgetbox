@@ -20,3 +20,27 @@ def rm_spcl_char(text):
     text = text.lower().strip()
     
     return text
+
+class ISO():
+    def __init__(self):
+        self.iso_dict= load_json('resource/iso.json')        
+        self.search_list = [[i[0]] + i[1] for i in self.iso_dict["en_to_iso"].items()]   
+
+    def __call__(self, text, tol= 2):
+        return self._search(text, tol)
+
+    def _search(self, text, tol = 2):
+        results = []
+        for en_id_pair in self.search_list:
+            if any((self._word_validation(text, target, tol) for target in en_id_pair)):
+                results.append(en_id_pair)
+        return results
+
+
+    def _word_validation(self, test:str, target:str, tol = 2):
+        if tol == 0:
+            return test in [target]
+        elif tol == 1:
+            return test.lower() in [target.lower()]
+        elif tol == 2:
+            return test.lower() in target.lower()
