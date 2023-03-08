@@ -26,7 +26,7 @@ class ISO():
     def __init__(self):
         self.dict_path= Path('resource/iso.json')
         if not self.dict_path.exists():
-            self.dict_path.mkdir(parents=True, exist_ok=True)
+            self.dict_path.parent.mkdir(parents=True, exist_ok=True)
             os.system(f"curl https://raw.githubusercontent.com/jihong-lee-data/gadgetbox/main/{str(self.dict_path)} > {str(self.dict_path)}")
         self.iso_dict= load_json(self.dict_path)        
         self.search_list = [[i[0]] + i[1] for i in self.iso_dict["en_to_iso"].items()]   
