@@ -24,13 +24,18 @@ def rm_spcl_char(text):
 class ISO():
     def __init__(self):
         self.dict_path= Path('resource/iso.json')
+        if not self.dict_path.exists():
+            self.dict_path.parent.mkdir(parents=True, exist_ok=True)
+            print(f"Downloading 'ISO dictionary'..")
+            os.system(f"curl https://raw.githubusercontent.com/jihong-lee-data/gadgetbox/main/{str(self.dict_path)} > {str(self.dict_path)}")
+            print(f"{'---'*10}\n'ISO dictionary' is saved to {str(self.dict_path)}")
         self.iso_dict= load_json(str(self.dict_path))
         self.code_dict= dict(zip(['e', 'k', '1', '2'], ['English', 'Korean', 'ISO 639-1 Code', 'ISO 639-2 Code']))
         
-    def __call__(self, query, tol= 2):
-        return self._search(query, tol)
+    def __call__(self, query, code:str= None, tol= 2):
+        return self._search(query, code, tol)
 
-    def _search(self, query, code:str =None, tol = 2):
+    def _search(self, query, code:str= None, tol = 2):
         results = []
         for row in self.iso_dict:
             if code:
